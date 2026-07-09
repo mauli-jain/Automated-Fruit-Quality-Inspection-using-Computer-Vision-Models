@@ -1,0 +1,39 @@
+# Core deep learning frameworks
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Object detection & instance segmentation (Phase 2)
+ultralytics>=8.0.0
+
+# Semantic segmentation (Phase 3)
+segmentation-models-pytorch>=0.3.3
+torchmetrics>=1.0.0
+pycocotools>=2.0.6
+albumentations>=1.3.0
+
+# Transformer-based segmentation (Phase 4)
+transformers>=4.30.0
+
+# Dataset acquisition
+roboflow>=1.1.0
+
+# Computer vision & image processing
+opencv-python>=4.8.0
+Pillow>=9.5.0
+scikit-image>=0.21.0
+
+# Data handling & metrics
+numpy>=1.24.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Utilities
+tqdm>=4.65.0
+
+# --- Notes ---
+# Phases 1-3 were run on Google Colab (GPU runtime); Phase 4 was run via Remote SSH on a dedicated GPU server, so exact package versions may vary slightly by environment. 
+# Pin versions with `pip freeze > requirements.txt` after setting up your own environment if you need exact reproducibility.
