@@ -41,7 +41,7 @@ Fruit quality inspection is traditionally manual, slow, and inconsistent. This p
 | 1 | Binary classification (fresh vs. rotten) | ResNet50 (transfer learning) | Google Colab | Kaggle |
 | 2 | Fruit detection + instance defect segmentation | YOLOv8-Seg | Google Colab | Roboflow |
 | 3 | Pixel-level semantic segmentation + damage % estimation | U-Net + ResNet50 encoder | Google Colab | Roboflow (COCO format) |
-| 4 | Transformer-based multi-disease segmentation | SegFormer (`nvidia/segformer-b0`) | VS Code + Remote SSH (UST GPU server) | UST industrial dataset (confidential) |
+| 4 | Transformer-based multi-disease segmentation | SegFormer (`nvidia/segformer-b0`) | VS Code + Remote SSH (UST GPU server) | Roboflow (COCO format) |
 
 Each phase builds on the failure modes of the previous one — classification → detection → CNN segmentation → transformer segmentation — enabling a genuine before/after comparison rather than four unrelated experiments.
 
@@ -187,7 +187,7 @@ fruit-quality-inspection-cv/
 
 **Goal:** Evaluate whether a Transformer encoder (self-attention, no positional encoding) improves segmentation over the CNN-based U-Net, while extending scope to **multi-disease classification**.
 
-**Dataset:** Roboflow dataset (COCO Segmentation format) with masks for 3 strawberry diseases: **Anthracnose Fruit Rot, Gray Mold, Powdery Mildew** — obtained via UST's internal GPU server (confidential industrial dataset, not redistributed in this repo).
+**Dataset:** Roboflow dataset (COCO Segmentation format) with masks for 3 strawberry diseases: **Anthracnose Fruit Rot, Gray Mold, Powdery Mildew** — obtained via UST's internal GPU server.
 
 **Architecture:** `nvidia/segformer-b0-finetuned-ade-512-512`, fine-tuned via Hugging Face `Trainer` API — hierarchical Transformer encoder + lightweight all-MLP decoder, 4 output classes (background + 3 diseases).
 
@@ -266,7 +266,7 @@ jupyter notebook notebooks/phase1_resnet50_classification.ipynb
 
 **Dataset access:**
 - **Phase 1:** Kaggle fruit freshness classification dataset (link in notebook).
-- **Phases 2–3:** Roboflow fruit defect dataset. Requires your own Roboflow API key — set it as an environment variable, do **not** hardcode it:
+- **Phases 2–4:** Roboflow fruit defect dataset. Requires your own Roboflow API key — set it as an environment variable, do **not** hardcode it:
   ```bash
   export ROBOFLOW_API_KEY="your_key_here"
   ```
@@ -275,15 +275,13 @@ jupyter notebook notebooks/phase1_resnet50_classification.ipynb
   from roboflow import Roboflow
   rf = Roboflow(api_key=os.environ["ROBOFLOW_API_KEY"])
   ```
-- **Phase 4:** Industrial/confidential dataset provided by UST – Infinity Labs, not publicly redistributable. The notebook is included for methodology and code reference; it will not run end-to-end without UST-internal access.
-
+  
 ---
 
 ## 🔭 Limitations & Future Work
 
 - **Dataset diversity:** Several phases were trained primarily on strawberry-heavy data; broader multi-fruit datasets would improve generalization (noted qualitatively in Phase 3, where the model still segmented non-strawberry fruits reasonably well despite this).
 - **Disease confusion:** Powdery Mildew vs. Gray Mold confusion (Phase 4) stems from visual similarity under varying illumination — more diverse disease-stage samples would help.
-- **Instance separation:** U-Net (Phase 3) is semantic, not instance, segmentation — performance drops for densely clustered/overlapping fruit; combining with an instance segmentation stage (e.g., Mask R-CNN or YOLOv8-Seg's instance masks) is a natural next step.
 - **Training budget:** All models were trained for only 10 epochs given Practice School time constraints; longer training with learning-rate scheduling could close some of the remaining gap between YOLOv8-Seg's box metrics and its mask metrics.
 - **Deployment:** A hybrid pipeline — fast YOLO/U-Net for real-time screening, SegFormer for flagged/ambiguous cases — would balance speed and accuracy in a production setting.
 
@@ -293,7 +291,7 @@ jupyter notebook notebooks/phase1_resnet50_classification.ipynb
 
 - End-to-end deep learning workflow: dataset curation, annotation (YOLO & COCO formats), transfer learning, training, evaluation, and comparative analysis.
 - Practical experience with **PyTorch, TensorFlow, Hugging Face Transformers, Ultralytics YOLO, OpenCV**, and segmentation-specific libraries (`segmentation-models-pytorch`, `pycocotools`, `albumentations`).
-- Industry-style GPU workflows: Google Colab for rapid prototyping, and **Remote SSH into a dedicated GPU server** for confidential industrial-dataset training.
+- Industry-style GPU workflows: Google Colab for rapid prototyping, and **Remote SSH into a dedicated GPU server**.
 - Research skills: literature review, experimental design, quantitative + qualitative evaluation, and technical report writing.
 
 ---
@@ -315,4 +313,4 @@ Practice School - 1, UST – Infinity Labs, Thiruvananthapuram (May–Jul 2026)
 
 ## 📄 License
 
-This project's code is licensed under the MIT License — see [LICENSE](LICENSE). Datasets used are subject to their own respective licenses (Kaggle, Roboflow); the Phase 4 industrial dataset remains confidential to UST – Infinity Labs and is not included or redistributed here.
+This project's code is licensed under the MIT License — see [LICENSE](LICENSE). Datasets used are subject to their own respective licenses (Kaggle, Roboflow).
