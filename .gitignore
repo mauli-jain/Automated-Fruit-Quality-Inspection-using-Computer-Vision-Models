@@ -1,0 +1,52 @@
+# ==== Datasets ====
+dataset/
+datasets/
+data/
+*.zip
+*.tar
+*.tar.gz
+Fruit_detection-1/
+sample_dataset/
+unseen_dataset/
+
+# ==== Model weights & checkpoints ====
+*.pt
+*.pth
+*.h5
+*.onnx
+*.ckpt
+runs/
+weights/
+checkpoints/
+
+# ==== Credentials / secrets ====
+.env
+*.env
+secrets.yaml
+config_local.py
+
+# ==== Jupyter / Python ====
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+
+# ==== Experiment tracking ====
+wandb/
+mlruns/
+lightning_logs/
+
+# ==== OS / editor junk ====
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ==== Large generated outputs (keep only curated results/ folder) ====
+outputs/
+*.log
+
