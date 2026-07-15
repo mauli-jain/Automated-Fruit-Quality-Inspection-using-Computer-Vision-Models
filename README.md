@@ -63,7 +63,7 @@ Automated-Fruit-Quality-Inspection-using-Computer-Vision-Models/
 ├── .gitignore
 ├── requirements.txt
 ├── Report/
-│   └── REPORT_MAULI_JAIN_311410.pdf 
+│   └── REPORT_MAULI_JAIN.pdf 
 ├── Phase-1_ResNet50_Classification/
 │   ├── Phase_1_ResNet50_Classification.ipynb
 │   ├── phase_1_graphs.png
