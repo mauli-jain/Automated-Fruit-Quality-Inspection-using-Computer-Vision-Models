@@ -57,7 +57,7 @@ CNN-based models (ResNet, YOLO, U-Net) offer efficient feature extraction and fa
 ## 🗂️ Repository Structure
 
 ```
-Intnership_Mauli Shaleen Jain_311410/
+Automated-Fruit-Quality-Inspection-using-Computer-Vision-Models/
 ├── README.md
 ├── LICENSE
 ├── .gitignore
