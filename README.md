@@ -9,7 +9,7 @@
 
 A four-phase deep learning pipeline for automated fruit quality inspection — progressing from image classification to transformer-based semantic segmentation — built during a **Practice School-I (PS-1) at UST – Infinity Labs, Thiruvananthapuram**, in fulfillment of BITS Pilani, Hyderabad Campus requirements (25 May – 18 Jul 2026).
 
-📄 **Full report (43 pages, with all figures/appendices):** [`report/UST_PS1_Report_MauliJain.pdf`](report/UST_PS1_Report_MauliJain.pdf)
+📄 **Full report (44 pages, with all figures/appendices):** [`Report/UST_REPORT_MAULI_JAIN_311410.pdf`](Report/UST_REPORT_MAULI_JAIN_311410.pdf )
 
 ---
 
@@ -39,9 +39,9 @@ Fruit quality inspection is traditionally manual, slow, and inconsistent. This p
 | Phase | Task | Architecture | Environment | Dataset Source |
 |---|---|---|---|---|
 | 1 | Binary classification (fresh vs. rotten) | ResNet50 (transfer learning) | Google Colab | Kaggle |
-| 2 | Fruit detection + instance defect segmentation | YOLOv8-Seg | Google Colab | Roboflow |
+| 2 | Fruit detection + instance defect segmentation | YOLOv8-Seg | Google Colab | Roboflow (YOLOv8 format)|
 | 3 | Pixel-level semantic segmentation + damage % estimation | U-Net + ResNet50 encoder | Google Colab | Roboflow (COCO format) |
-| 4 | Transformer-based multi-disease segmentation | SegFormer (`nvidia/segformer-b0`) | VS Code + Remote SSH (UST GPU server) | Roboflow (COCO format) |
+| 4 | Transformer-based multi-disease segmentation | SegFormer | VS Code + Remote SSH (UST GPU server) | Roboflow (COCO format) |
 
 Each phase builds on the failure modes of the previous one — classification → detection → CNN segmentation → transformer segmentation — enabling a genuine before/after comparison rather than four unrelated experiments.
 
@@ -53,21 +53,34 @@ CNN-based models (ResNet, YOLO, U-Net) offer efficient feature extraction and fa
 
 ---
 
+
 ## 🗂️ Repository Structure
 
 ```
-fruit-quality-inspection-cv/
+Intnership_Mauli Shaleen Jain_311410/
 ├── README.md
 ├── LICENSE
 ├── .gitignore
 ├── requirements.txt
-├── report/
-│   └── UST_PS1_Report_MauliJain.pdf
-└── notebooks/
-    ├── phase1_resnet50_classification.ipynb
-    ├── phase2_yolov8seg_detection.ipynb
-    ├── phase3_unet_resnet50_segmentation.ipynb
-    └── phase4_segformer_transformer.ipynb
+├── Report/
+│   └── UST_REPORT_MAULI_JAIN_311410.pdf 
+├── Phase-1_ResNet50_Classification/
+│   ├── Phase_1_ResNet50_Classification.ipynb
+│   ├── phase_1_graphs.png
+│   └── phase_1_results.png
+├── Phase-2_YOLOv8-Seg_Segmentation/
+│   ├── Phase_2_YOLOv8-Seg_Segmentation.ipynb
+│   ├── phase_2_graphs.png
+│   └── phase_2_sample_result.jpg
+├── Phase-3_U-Net+ResNet50_Semantic_Segmentation/
+│   ├── Phase_3_UNet+ResNet50_Semantic_Segmentation.ipynb
+│   ├── Phase-3 Graphs/
+│   └── Phase-3 Sample Outputs/
+└── Phase-4_Segformer_Transformer/
+    ├── Phase_4_Segformer.ipynb
+    ├── Phase-4 Graphs and Matrices/
+    └── Phase-4 Sample Outputs/
+
 ```
 
 ---
@@ -101,9 +114,18 @@ fruit-quality-inspection-cv/
 |---|---|
 | Loss function | Categorical Cross-Entropy |
 | Optimizer | Adam |
-| Learning rate | 1e-4 |
+| Learning rate | 5e-4 |
 | Batch size | 32 |
 | Epochs | 10 |
+
+**Results (Table 4.1):**
+| Metric | Value |
+|---|---|
+| Accuracy | 92.55% |
+| Precision | 94 % |
+| Recall | 93 % |
+| Inference Time | 16.6073 ms |
+| FPS | 162.46 |
 
 **Results:**
 - Training accuracy improved from **~59% → ~93%** across 10 epochs; validation accuracy tracked closely, indicating reasonable generalization.
@@ -118,6 +140,8 @@ fruit-quality-inspection-cv/
 **Goal:** Move from image-level classification to instance-level detection and defect segmentation.
 
 **Dataset:** Higher-quality annotated dataset obtained via Roboflow (better annotation quality, greater diversity, more realistic distribution than Phase 1).
+
+**Reproducing this phase:** requires a Roboflow API key (see [Setup & Usage](#-setup--usage)) and access to the linked Roboflow project.
 
 **Architecture:** YOLOv8-Seg — single-stage detector with 3 modules:
 1. **Backbone** — hierarchical multi-scale feature extraction
@@ -134,7 +158,7 @@ fruit-quality-inspection-cv/
 | Image size | 640×640 |
 | Platform | Google Colab |
 
-**Results (Table 4.1):**
+**Results (Table 4.2):**
 | Metric | Value |
 |---|---|
 | Pixel Accuracy | 87.53% |
@@ -166,7 +190,7 @@ fruit-quality-inspection-cv/
 | Platform | Google Colab |
 | Loss | Dice + BCE / IoU-based |
 
-**Results (Table 4.2):**
+**Results (Table 4.3):**
 | Metric | Value |
 |---|---|
 | Pixel Accuracy | 96.36% |
@@ -179,7 +203,7 @@ fruit-quality-inspection-cv/
 
 **Qualitative results:** Successfully segmented and estimated damage % for multiple strawberries in a single image (per-instance damage: 69.61%, 53.95%, 31.13%), a rotten apple (82.85% damage), a defective pear (51.48%), and a defective mango (62.51%) — see full report for overlay visualizations and the prediction-confidence heatmap.
 
-**Limitation → motivation for Phase 4:** As a semantic (not instance) segmentation model, U-Net's performance degrades on **densely clustered/overlapping fruit**. This motivated testing whether a Transformer-based encoder could better capture global context.
+**Limitation → motivation for Phase 4:** As a semantic segmentation model, U-Net's performance degrades on **densely clustered/overlapping fruit**. This motivated testing whether a Transformer-based encoder could better capture global context.
 
 ---
 
@@ -199,7 +223,7 @@ fruit-quality-inspection-cv/
 | Framework | Hugging Face Transformers + PyTorch |
 | Platform | VS Code, Remote SSH → UST GPU server |
 
-**Results (Table 4.3):**
+**Results (Table 4.4):**
 | Metric | Value |
 |---|---|
 | Pixel Accuracy | 95.92% |
@@ -264,23 +288,36 @@ Run any phase notebook top to bottom in Jupyter or Colab:
 jupyter notebook notebooks/phase1_resnet50_classification.ipynb
 ```
 
-**Dataset access:**
-- **Phase 1:** Kaggle fruit freshness classification dataset (link in notebook).
-- **Phases 2–4:** Roboflow fruit defect dataset. Requires your own Roboflow API key — set it as an environment variable, do **not** hardcode it:
+# Phase 1: 
+- Dataset : Kaggle dataset [`sriramr/fruits-fresh-and-rotten-for-classification`](https://www.kaggle.com/datasets/sriramr/fruits-fresh-and-rotten-for-classification).
+  Requires a Kaggle API token — generate one from your Kaggle account settings,
+  download `kaggle.json`, and upload it when prompted in the notebook's setup cell.
+
+- Sample images folder : Phase 1's qualitative testing cells expect a handful of sample fruit images
+  (fresh/rotten apple, banana, orange) placed in `SAMPLE_IMAGES_DIR`
+  (`/content/sample_images/` by default). Upload your own test images with matching filenames, or update `sample_filenames` in the config cell.
+
+
+# Phases 2–3:
+- Dataset :  Roboflow fruit defect dataset (private project — see note below).
+  Requires your own Roboflow API key. Never hardcode it — the notebooks read it via:
+  - **Colab (default, as used in these notebooks):** open the 🔑 Secrets tab in the
+    left sidebar, add a secret named `ROBOFLOW_API_KEY`, enable notebook access.
+    The notebook reads it with `google.colab.userdata.get("ROBOFLOW_API_KEY")`.
+  - **Local Jupyter / non-Colab environments:** set it as an environment variable
+    instead and swap that line for `os.environ.get("ROBOFLOW_API_KEY")`:
+
   ```bash
   export ROBOFLOW_API_KEY="your_key_here"
   ```
-  ```python
-  import os
-  from roboflow import Roboflow
-  rf = Roboflow(api_key=os.environ["ROBOFLOW_API_KEY"])
-  ```
-  
+
+  > **Note:** The Roboflow project referenced in Phase 2–3 notebooks (`maulis-workspace-l7bbl/fruit_detection-rdzge`) is a private project. To reproduce these phases, either request access, or substitute your own Roboflow-hosted fruit defect dataset and update the workspace/project names accordingly.
+
 ---
 
 ## 🔭 Limitations & Future Work
 
-- **Dataset diversity:** Several phases were trained primarily on strawberry-heavy data; broader multi-fruit datasets would improve generalization (noted qualitatively in Phase 3, where the model still segmented non-strawberry fruits reasonably well despite this).
+- **Dataset diversity:** Several phases were trained primarily on strawberry-heavy data; broader multi-fruit datasets (which we were not able to find while training the models) would improve generalization (noted qualitatively in Phase 3, where the model still segmented non-strawberry fruits reasonably well despite this).
 - **Disease confusion:** Powdery Mildew vs. Gray Mold confusion (Phase 4) stems from visual similarity under varying illumination — more diverse disease-stage samples would help.
 - **Training budget:** All models were trained for only 10 epochs given Practice School time constraints; longer training with learning-rate scheduling could close some of the remaining gap between YOLOv8-Seg's box metrics and its mask metrics.
 - **Deployment:** A hybrid pipeline — fast YOLO/U-Net for real-time screening, SegFormer for flagged/ambiguous cases — would balance speed and accuracy in a production setting.
@@ -290,8 +327,8 @@ jupyter notebook notebooks/phase1_resnet50_classification.ipynb
 ## 📚 Learning Outcomes
 
 - End-to-end deep learning workflow: dataset curation, annotation (YOLO & COCO formats), transfer learning, training, evaluation, and comparative analysis.
-- Practical experience with **PyTorch, TensorFlow, Hugging Face Transformers, Ultralytics YOLO, OpenCV**, and segmentation-specific libraries (`segmentation-models-pytorch`, `pycocotools`, `albumentations`).
-- Industry-style GPU workflows: Google Colab for rapid prototyping, and **Remote SSH into a dedicated GPU server**.
+- Practical experience with **PyTorch, TensorFlow, Hugging Face Transformers, Ultralytics YOLO, OpenCV**.
+- Industry-style GPU workflows: Google Colab for rapid prototyping, and **Remote SSH into a dedicated GPU server**
 - Research skills: literature review, experimental design, quantitative + qualitative evaluation, and technical report writing.
 
 ---
